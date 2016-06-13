@@ -107,7 +107,7 @@ def _generate_varied_clusters():
     plt.show()
 
 
-if __name__ == "__main__":
+def points_for_clusters():
     no_instances = [100, 1000, 10000, 100000, 1000000]
     no_features = [2, 4, 8, 16, 32, 64, 128, 256, 512]
     no_clusters = [2, 4, 6, 8]
@@ -121,4 +121,27 @@ if __name__ == "__main__":
                 generate_anisotropically_clusters(number_of_samples=no_instance, number_of_clusters=no_cluster, n_features=no_feature)
                 generate_varied_clusters(number_of_samples=no_instance, number_of_clusters=no_cluster, n_features=no_feature)
             print
+        print
+
+
+def generate_regression_datasets(n_samples, n_features, noise=25, bias=100):
+    X = datasets.make_regression(n_samples=n_samples, n_features=n_features, coef=True, noise=noise, bias=bias)
+    header = ["A" + str(i) for i in xrange(len(X[0][0]))] + ["Dep"]
+    content = []
+    for independent, dependent in zip(X[0], X[1]):
+        content.append(independent.tolist() + [dependent])
+
+    filename = "./RData/Regression_" + str(n_samples) + "_" + str(n_features) + "_" + str(noise) + "_" + str(bias) + ".csv"
+    df = pd.DataFrame(content, columns=header)
+    df.to_csv(filename, index=False)
+
+if __name__ == "__main__":
+    n_samples = [100, 1000, 10000, 100000, 1000000]
+    no_features = [2, 4, 8, 16, 32, 64, 128, 256, 512]
+
+    for n_sample in n_samples:
+        for no_feature in no_features:
+                print "# ",
+                sys.stdout.flush()
+                generate_regression_datasets(n_samples=n_sample, n_features=no_feature)
         print
