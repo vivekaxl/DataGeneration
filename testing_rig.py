@@ -73,20 +73,28 @@ def test_logistic_regression(filename):
         test_indep = test_data[h_indep]
         test_dep = test_data[h_dep]
         logistic = linear_model.LogisticRegression()
-        logistic.fit(train_indep, train_dep)
-
-        import pdb
-        pdb.set_trace()
+        logistic.fit(train_indep, [i[-1] for i in train_dep.values.tolist()])
+        coeffs.append(logistic.coef_)
         acc.append(logistic.score(X=test_indep, y=[i[-1] for i in test_dep.values.tolist()]))
 
-    from numpy import mean
-    print mean(acc)
+    extract_name = filename.split("/")[-1].split(".")[0] + ".p"
+    import pickle
+    pickle.dump(coeffs, open("./Results_Logistic_Regression/coeffs_" + extract_name, "wb"))
+    pickle.dump(acc, open("./Results_Logistic_Regression/rss_" + extract_name, "wb"))
+    print
+    print "Total Time: ", time.time() - start_time
 
-if __name__ == "__main__":
+def _test_logistic_regression(filename)
     folder_name = "./CData/"
     from os import listdir
     files = sorted([folder_name + file for file in listdir(folder_name)])
     for file in files:
         print file
-        file = "./CData/Classification_10000_32_2_50.0.csv"
+        # file = "./CData/Classification_10000_32_2_50.0.csv"
         test_logistic_regression(file)
+
+
+def test_random_forst_classification(filename):
+
+
+if __name__ == "__main__":
